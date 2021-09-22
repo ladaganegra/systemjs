@@ -22,6 +22,10 @@ systemJSPrototype.prepareImport = function (doProcessScripts) {
 if (hasDocument) {
   processScripts();
   window.addEventListener('DOMContentLoaded', processScripts);
+} else if (self !== undefined) { //For using systemjs in contexts without document like webworkers
+  if (self.sys_config !== undefined) { //Before importScript('...systemjs.js') declare const sys_config with import-map style
+    extendImportMap(importMap, JSON.stringify(self.sys_config), baseUrl);
+  }
 }
 
 function processScripts () {
